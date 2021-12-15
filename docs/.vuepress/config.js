@@ -1,6 +1,6 @@
 module.exports = {
-  title: 'study records',
-  description: 'study records',
+  title: 'STUDY NOTES',
+  description: 'STUDY NOTES',
   base: '/study_notes/',
   theme: 'reco',
   locales: {
@@ -14,23 +14,22 @@ module.exports = {
       nav: [
           { text: '首页', link: '/' },
           { 
-              text: 'Hello W blog', 
+              text: 'Hello W BLOG', 
               items: [
                 { text: 'Github', link: 'https://github.com/keyL-liucong' },
               ]
           }
       ],
       sidebar: [
-        {
-          title: "基础学习",
-          path: '/handbook/ConditionalTypes',
-          collapsable: true, // 不折叠
-          children: [
-            { title: "条件类型", path: "/handbook/ConditionalTypes" },
-            { title: "泛型", path: "/handbook/Generics" }
-          ],
-        },
-
+        // {
+        //   title: "基础学习",
+        //   path: '/handbook/ConditionalTypes',
+        //   collapsable: true, // 不折叠
+        //   children: [
+        //     { title: "条件类型", path: "/handbook/ConditionalTypes" },
+        //     { title: "泛型", path: "/handbook/Generics" }
+        //   ],
+        // },
           {
               title: 'html',
               path: '/html/TheBasics',
@@ -53,7 +52,7 @@ module.exports = {
             path: '/javascript/TheBasics',
             collapsable: true,
             children: [
-              { title: "基础", path: "/javascript/TheBasics" },
+              { title: "JavaScript深入之从原型到原型链", path: "/javascript/prototype" },
               { title: "es5", path: "/javascript/es5" }
             ],
           },
