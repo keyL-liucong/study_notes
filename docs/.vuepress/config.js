@@ -3,6 +3,12 @@ module.exports = {
   description: 'STUDY NOTES',
   base: '/study_notes/',
   theme: 'reco',
+  head: [
+    // 设置 favor.ico，.vuepress/public 下
+    [
+      'link', { rel: 'icon', href: '/logo.png' }
+    ]
+  ],
   locales: {
       '/': {
         lang: 'zh-CN'
@@ -21,22 +27,12 @@ module.exports = {
           }
       ],
       sidebar: [
-        // {
-        //   title: "基础学习",
-        //   path: '/handbook/ConditionalTypes',
-        //   collapsable: true, // 不折叠
-        //   children: [
-        //     { title: "条件类型", path: "/handbook/ConditionalTypes" },
-        //     { title: "泛型", path: "/handbook/Generics" }
-        //   ],
-        // },
           {
               title: 'html',
               path: '/html/TheBasics',
               collapsable: true,
               children: [
                   { title: "html", path: "/html/TheBasics" },
-                  { title: "html", path: "/html/TheBasics" }
               ]
           },
           {
