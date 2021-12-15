@@ -14,7 +14,7 @@ git add -A
 git commit -m 'deploy'
 
 # 如果发布到 https://<USERNAME>.github.io/<REPO>  https://github.com/keyL-liucong/study_notes.git  https://gitee.com/keyLyc/study_notes.git
-git push -f https://github.com/keyL-liucong/study_notes.git main:gh-pages
+git push -f https://github.com/keyL-liucong/study_notes.git master:gh-pages
 
 # git@gitee.com:keyLyc/study_notes.git 需要验证权限
 
