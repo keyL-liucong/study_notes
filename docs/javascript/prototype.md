@@ -13,6 +13,8 @@ function Person() {
 var person = new Person();
 person.name = 'Kevin';
 console.log(person.name) // Kevin
+console.log(typeof(person)) // object
+console.log(person instanceof Object) // true
 ```
 
 在这个例子中，Person 就是一个构造函数，我们使用 new 创建了一个实例对象 person。

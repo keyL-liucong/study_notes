@@ -88,6 +88,14 @@ module.exports = {
             ],
           },
           {
+            title: "项目总结",
+            path: '/project/Summary',
+            collapsable: true,
+            children: [
+              { title: "后台管理系统权限控制RBAC", path: "/project/RBAC" },
+            ],
+          },
+          {
             title: "计算机网络",
             path: '/computer/network',
             collapsable: true,
