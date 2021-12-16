@@ -359,6 +359,8 @@ Vue.directive('allow', {
 
 [boot.jeecg](http://boot.jeecg.com/user/login?redirect=%2F)
 
+[jeecg Vue3版本](http://boot3.jeecg.com/)
+
 [gin-vue-admin](https://demo.gin-vue-admin.com/)
 
 [django-vue-admin](https://demo.django-vue-admin.com/)
