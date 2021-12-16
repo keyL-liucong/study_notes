@@ -93,6 +93,7 @@ module.exports = {
             collapsable: true,
             children: [
               { title: "后台管理系统权限控制RBAC", path: "/project/RBAC" },
+              { title: "常用工具网站", path: "/project/ToolWebSite" }
             ],
           },
           {
