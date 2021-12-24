@@ -92,6 +92,7 @@ module.exports = {
             path: '/project/Summary',
             collapsable: true,
             children: [
+              { title: "常用正则表达式", path: "/project/Regular" },
               { title: "后台管理系统权限控制RBAC", path: "/project/RBAC" },
               { title: "常用工具网站", path: "/project/ToolWebSite" }
             ],
