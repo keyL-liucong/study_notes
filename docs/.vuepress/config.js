@@ -49,7 +49,8 @@ module.exports = {
             collapsable: true,
             children: [
               { title: "JavaScript深入之从原型到原型链", path: "/javascript/prototype" },
-              { title: "es5", path: "/javascript/es5" }
+              { title: "es5", path: "/javascript/es5" },
+              { title: "js异步解决方案", path: "/javascript/Async" }
             ],
           },
           {
