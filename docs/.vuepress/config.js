@@ -53,6 +53,7 @@ module.exports = {
               { title: "JavaScript深入之从原型到原型链", path: "/javascript/prototype" },
               { title: "es5", path: "/javascript/es5" },
               { title: "js异步解决方案", path: "/javascript/Async" },
+              { title: "promise", path: "/javascript/Promise" },
               { title: "js设计模式", path: "/javascript/DesignPattern" }
             ],
           },
