@@ -25,7 +25,8 @@
 [友盟](https://www.umeng.com/)
 [webfunny](https://www.webfunny.cn/blog/post/79)
 [朋友圈转发截图生成工具](https://akarin.dev/WechatMomentScreenshot/)
-
+[简历模板](https://www.developers.pub/resume)
+[简历模板](https://www.mujicv.com/)
 
 ## 技术博客类 
 [掘金](https://juejin.cn/)

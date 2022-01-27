@@ -66,7 +66,8 @@ module.exports = {
               { title: "Vue3.0基础", path: "/Vue/TheBasics3x" },
               { title: "Vue2.x源码", path: "/Vue/SourceCode2x" },
               { title: "Vue进阶", path: "/Vue/advance" },
-              { title: "Vue Diff算法", path: "/Vue/diff" }
+              { title: "Vue Diff算法", path: "/Vue/diff" },
+              { title: "Vue源码解读", path: "/Vue/SourceCode" },
             ],
           },
           {
@@ -76,6 +77,14 @@ module.exports = {
             children: [
               { title: "React基础", path: "/React/TheBasics" },
               { title: "React进阶", path: "/React/advance" }
+            ],
+          },
+          {
+            title: "微信小程序",
+            path: '/mp/index',
+            collapsable: true,
+            children: [
+              { title: "小程序发展史", path: "/mp/index" },
             ],
           },
           {
@@ -131,6 +140,7 @@ module.exports = {
             children: [
               { title: "前端工程化", path: "/frontEnd/Engineered" },
               { title: "前端性能优化", path: "/frontEnd/Optimization" },
+              { title: "前端部署", path: "/frontEnd/Deploy" },
             ],
           }
           // {
