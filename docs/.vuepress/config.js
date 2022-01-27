@@ -81,7 +81,7 @@ module.exports = {
           },
           {
             title: "微信小程序",
-            path: '/mp/index',
+            path: '/mp/title',
             collapsable: true,
             children: [
               { title: "小程序发展史", path: "/mp/TheBasics" },
