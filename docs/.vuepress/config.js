@@ -84,7 +84,7 @@ module.exports = {
             path: '/mp/index',
             collapsable: true,
             children: [
-              { title: "小程序发展史", path: "/mp/index" },
+              { title: "小程序发展史", path: "/mp/TheBasics" },
             ],
           },
           {
