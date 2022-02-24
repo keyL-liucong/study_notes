@@ -27,28 +27,29 @@ module.exports = {
           }
       ],
       sidebar: [
-          {
-              title: 'html',
-              path: '/html/TheBasics',
-              collapsable: true,
-              children: [
-                  { title: "html", path: "/html/TheBasics" },
-              ]
-          },
-          {
-            title: "css",
-            path: '/css/TheBasics',
-            collapsable: true,
-            children: [
-              { title: "css", path: "/css/TheBasics" },
-            ],
-          },
+          // {
+          //     title: 'html',
+          //     path: '/html/TheBasics',
+          //     collapsable: true,
+          //     children: [
+          //         { title: "html", path: "/html/TheBasics" },
+          //     ]
+          // },
+          // {
+          //   title: "css",
+          //   path: '/css/TheBasics',
+          //   collapsable: true,
+          //   children: [
+          //     { title: "css", path: "/css/TheBasics" },
+          //   ],
+          // }, 
           {
             title: "javascript",
             path: '/javascript/TheBasics',
             collapsable: true,
             children: [
               { title: "js运行机制", path: "/javascript/TheOperatingMechanism" },
+              { title: "常见垃圾回收算法与 JS GC 原理", path: "/javascript/JSGC" },
               { title: "闭包", path: "/javascript/Closure" },
               { title: "JavaScript深入之从原型到原型链", path: "/javascript/prototype" },
               { title: "es5", path: "/javascript/es5" },
@@ -141,6 +142,7 @@ module.exports = {
               { title: "前端工程化", path: "/frontEnd/Engineered" },
               { title: "前端性能优化", path: "/frontEnd/Optimization" },
               { title: "前端部署", path: "/frontEnd/Deploy" },
+              { title: "浏览器工作原理", path: "/frontEnd/Browser" },
             ],
           }
           // {
