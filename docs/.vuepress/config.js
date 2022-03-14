@@ -26,7 +26,8 @@ module.exports = config({
     nav: require('./nav.js'),
     sidebar: require('./sidebar.js'),
     sidebarDepth: 2,
-    lastUpdated: '上次更新',
+    lastUpdated: false,
+    updateTime: false,    // 最后编辑时间
     searchMaxSuggestoins: 10,
     editLinks: false,
     editLinkText: '帮助我们改善此页面！',
@@ -50,7 +51,7 @@ module.exports = config({
     copyCode: false,
     photoSwipe: false,
     repoDisplay: false,
-    fullscreen: false,
+    fullscreen: true,
     sidebarIcon: false,
     breadcrumb: false,
     contributor: false
