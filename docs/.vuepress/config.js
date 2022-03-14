@@ -3,7 +3,7 @@ const { config } = require('vuepress-theme-hope')
 module.exports = config({
   title: 'Hello World',
   description: 'welcome Hello W\' study notes',
-  dest: './dist',
+  base: '/study_notes/',
   port: '8888',
   head: [
     ['link', { rel: 'icon', href: '/logo.png' }],
