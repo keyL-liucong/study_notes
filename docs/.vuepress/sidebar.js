@@ -25,7 +25,7 @@ module.exports = {
   /* --------- 后端开发 --------- */
   '/backend-knowledge/python/': require('../backend-knowledge/python/sidebar'),
   /* --------- 项目相关 --------- */
-  '/project//': require('../project//sidebar'),
+  '/project/': require('../project/sidebar'),
   /* --------- 其它 --------- */
   '/extracurricular/': require('../extracurricular/sidebar'),
   '/': [],

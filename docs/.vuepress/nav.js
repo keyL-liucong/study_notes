@@ -79,16 +79,16 @@ module.exports = [
       { text: '源码阅读与学习', link: '/in-depth-learning/source-code/' }
     ]
   },
-  {
-    text: '后端知识',
-    items: [
-      { text: 'Python', link: '/backend-knowledge/python/' }
-    ]
-  },
+  // {
+  //   text: '后端知识',
+  //   items: [
+  //     { text: 'Python', link: '/backend-knowledge/python/' }
+  //   ]
+  // },
   {
     text: '项目相关',
     items: [
-      { text: '解决方案', link: '/project//' }
+      { text: '解决方案', link: '/project/' }
     ]
   },
   {
@@ -97,7 +97,7 @@ module.exports = [
       {
         text: '站内',
         items: [
-          { text: '关于本站', link: '/about/' },
+          // { text: '关于本站', link: '/about/' },
           { text: '课外学习', link: '/extracurricular/' }
         ]
       },
