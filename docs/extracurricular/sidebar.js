@@ -12,7 +12,7 @@ module.exports = [
         title: '产品与人性 | 28个心理学效应',
         path: '/extracurricular/product-and-humanity',
         collapsable: true
-      }
+      },
     ]
   }
 ]

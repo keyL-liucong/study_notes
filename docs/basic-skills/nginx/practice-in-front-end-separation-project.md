@@ -27,7 +27,7 @@ upstream ws_proxy {
 
 server {
     listen       80;
-    server_name  www.keyL-liucongblog.com keyL-liucongblog.com;
+    server_name  localhost;
 
     root /home/spa-project/keyL-liucongblog;
     index index.html;

@@ -98,7 +98,8 @@ module.exports = [
         text: '站内',
         items: [
           // { text: '关于本站', link: '/about/' },
-          { text: '课外学习', link: '/extracurricular/' }
+          { text: '课外学习', link: '/extracurricular/' },
+          { text: 'ecs之旅', link: '/ecs/' }
         ]
       },
       {

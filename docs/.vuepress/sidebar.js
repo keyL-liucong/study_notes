@@ -28,5 +28,6 @@ module.exports = {
   '/project/': require('../project/sidebar'),
   /* --------- 其它 --------- */
   '/extracurricular/': require('../extracurricular/sidebar'),
+  '/ecs/': require('../ecs/sidebar'),
   '/': [],
 };
