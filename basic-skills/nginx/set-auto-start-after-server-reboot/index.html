@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Nginx 设置开机自启 | Hello World</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="icon" href="/study_notes/logo.png">
+    <link rel="stylesheet" href="/study_notes/css/style.css">
+    <script charset="utf-8" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script charset="utf-8" src="/study_notes/js/main.js"></script>
+    <link rel="alternate" type="application/atom+xml" href="https://keyl-liucong.github.io/study_notes/atom.xml" title="Hello World Atom Feed">
+    <link rel="alternate" type="application/json" href="https://keyl-liucong.github.io/study_notes/feed.json" title="Hello World JSON Feed">
+    <link rel="alternate" type="application/rss+xml" href="https://keyl-liucong.github.io/study_notes/rss.xml" title="Hello World RSS Feed">
+    <meta name="description" content="welcome Hello W' study notes">
+    <meta property="og:url" content="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot.html">
+    <meta property="og:site_name" content="Hello World">
+    <meta property="og:title" content="Nginx 设置开机自启">
+    <meta property="og:description" content="Nginx 设置开机自启 在生产环境中，如果我们的服务器意外重启，此时要是 Nginx 没有随服务器启动起来，我们的 Web 站点就会是无应答的状态，这会给我们带来不同程度损失。 因此我们需要设置 Nginx 开机自启。 Ubuntu 设置开机自启 " 以下所有命令，如果你是 root 账户，直接执行即可，不是的话前面加 sudo 获取权限。" 在 Ubun">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh-CN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image:alt" content="Hello World">
+    <meta property="article:author" content="keyl-liucong">
+    
+    <link rel="preload" href="/study_notes/assets/css/0.styles.6a020005.css" as="style"><link rel="preload" href="/study_notes/assets/js/app.006a285a.js" as="script"><link rel="preload" href="/study_notes/assets/js/vendors~layout-Layout.de8637a7.js" as="script"><link rel="preload" href="/study_notes/assets/js/vendors~layout-Blog~layout-Layout~layout-NotFound.943521ea.js" as="script"><link rel="preload" href="/study_notes/assets/js/page-Nginx设置开机自启.a170900d.js" as="script"><link rel="prefetch" href="/study_notes/assets/js/layout-Blog.d15898f0.js"><link rel="prefetch" href="/study_notes/assets/js/layout-Layout.e61d1468.js"><link rel="prefetch" href="/study_notes/assets/js/layout-NotFound.b7e111dd.js"><link rel="prefetch" href="/study_notes/assets/js/page--05f000b7.537c2027.js"><link rel="prefetch" href="/study_notes/assets/js/page--063c959e.34a16fd9.js"><link rel="prefetch" href="/study_notes/assets/js/page--099ca7a5.e5e18f7e.js"><link rel="prefetch" href="/study_notes/assets/js/page--0b79fb31.b1d21d6f.js"><link rel="prefetch" href="/study_notes/assets/js/page--143f6e11.54536401.js"><link rel="prefetch" href="/study_notes/assets/js/page--153d0dd1.b916b4b0.js"><link rel="prefetch" href="/study_notes/assets/js/page--1712e921.c1bd30c9.js"><link rel="prefetch" href="/study_notes/assets/js/page--1804b9eb.386018ea.js"><link rel="prefetch" href="/study_notes/assets/js/page--19e768de.994878eb.js"><link rel="prefetch" href="/study_notes/assets/js/page--21dc3df1.5cc2ef56.js"><link rel="prefetch" href="/study_notes/assets/js/page--2343f866.6ebb71a2.js"><link rel="prefetch" href="/study_notes/assets/js/page--2475210a.499021ba.js"><link rel="prefetch" href="/study_notes/assets/js/page--251fd40b.9d64851f.js"><link rel="prefetch" href="/study_notes/assets/js/page--2784e231.31d941b6.js"><link rel="prefetch" href="/study_notes/assets/js/page--2dda86b4.a9cc86b9.js"><link rel="prefetch" href="/study_notes/assets/js/page--39f9e11e.c0601c8d.js"><link rel="prefetch" href="/study_notes/assets/js/page--3bb33e33.0f469a6d.js"><link rel="prefetch" href="/study_notes/assets/js/page--425643e3.75596034.js"><link rel="prefetch" href="/study_notes/assets/js/page--42f637ea.2d631acd.js"><link rel="prefetch" href="/study_notes/assets/js/page--43d6c1fe.0e9792fe.js"><link rel="prefetch" href="/study_notes/assets/js/page--4752a9b7.7bc09b7e.js"><link rel="prefetch" href="/study_notes/assets/js/page--4caf8884.c046f83c.js"><link rel="prefetch" href="/study_notes/assets/js/page--53192c9e.735ea98e.js"><link rel="prefetch" href="/study_notes/assets/js/page--55a3d391.55cd7093.js"><link rel="prefetch" href="/study_notes/assets/js/page--568b265e.35b21d56.js"><link rel="prefetch" href="/study_notes/assets/js/page--5a522d71.b96e3bc6.js"><link rel="prefetch" href="/study_notes/assets/js/page--5b4ef42f.58ce05f4.js"><link rel="prefetch" href="/study_notes/assets/js/page--602b1d71.714c6759.js"><link rel="prefetch" href="/study_notes/assets/js/page--63d6205a.d9cc6175.js"><link rel="prefetch" href="/study_notes/assets/js/page--6a8beb2b.0b0f3735.js"><link rel="prefetch" href="/study_notes/assets/js/page--6c500c44.d2a14374.js"><link rel="prefetch" href="/study_notes/assets/js/page--7bd76233.6fe31b97.js"><link rel="prefetch" href="/study_notes/assets/js/page--95d0826a.3c041edd.js"><link rel="prefetch" href="/study_notes/assets/js/page--9667e0aa.32eb5361.js"><link rel="prefetch" href="/study_notes/assets/js/page--a47291b4.632316b9.js"><link rel="prefetch" href="/study_notes/assets/js/page--ab820fee.4f4c8498.js"><link rel="prefetch" href="/study_notes/assets/js/page--cccf709a.b93245c0.js"><link rel="prefetch" href="/study_notes/assets/js/page--e5bc23fa.a8bf0e8a.js"><link rel="prefetch" href="/study_notes/assets/js/page--e771f96a.18bf5783.js"><link rel="prefetch" href="/study_notes/assets/js/page-Arrayprototypeincludes().53f04680.js"><link rel="prefetch" href="/study_notes/assets/js/page-Array扩展.86970078.js"><link rel="prefetch" href="/study_notes/assets/js/page-BFC.51b73305.js"><link rel="prefetch" href="/study_notes/assets/js/page-BigInt.8bd97259.js"><link rel="prefetch" href="/study_notes/assets/js/page-B端产品文案指南.22cfb12b.js"><link rel="prefetch" href="/study_notes/assets/js/page-CICD.ad1ee85c.js"><link rel="prefetch" href="/study_notes/assets/js/page-CSS.56e4e74c.js"><link rel="prefetch" href="/study_notes/assets/js/page-CSS引入方式.e7a6f768.js"><link rel="prefetch" href="/study_notes/assets/js/page-CSS规范.133a88ca.js"><link rel="prefetch" href="/study_notes/assets/js/page-CSS问题.2790d193.js"><link rel="prefetch" href="/study_notes/assets/js/page-Class.eeb3b27e.js"><link rel="prefetch" href="/study_notes/assets/js/page-CodeReview.fe9c0455.js"><link rel="prefetch" href="/study_notes/assets/js/page-ES6-ES12新特性.3b42730f.js"><link rel="prefetch" href="/study_notes/assets/js/page-Flexbox布局.c2f4ac20.js"><link rel="prefetch" href="/study_notes/assets/js/page-Function扩展.eb1e21ac.js"><link rel="prefetch" href="/study_notes/assets/js/page-Generator.9d761fd7.js"><link rel="prefetch" href="/study_notes/assets/js/page-Git.9d5fef2c.js"><link rel="prefetch" href="/study_notes/assets/js/page-Git工作流—分支策略.23b43e68.js"><link rel="prefetch" href="/study_notes/assets/js/page-Git提交信息规范.93178215.js"><link rel="prefetch" href="/study_notes/assets/js/page-Grid布局.12b3ea17.js"><link rel="prefetch" href="/study_notes/assets/js/page-HTML.26952541.js"><link rel="prefetch" href="/study_notes/assets/js/page-HTML基本结构.6829e8f2.js"><link rel="prefetch" href="/study_notes/assets/js/page-HTML规范.8ba8b6fc.js"><link rel="prefetch" href="/study_notes/assets/js/page-HTML问题.bf9f0c94.js"><link rel="prefetch" href="/study_notes/assets/js/page-Home.5530680a.js"><link rel="prefetch" href="/study_notes/assets/js/page-JSON扩展.cf0624e3.js"><link rel="prefetch" href="/study_notes/assets/js/page-JavaScript.94120cfd.js"><link rel="prefetch" href="/study_notes/assets/js/page-JavaScript手写函数.b3f66cd4.js"><link rel="prefetch" href="/study_notes/assets/js/page-JavaScript深入之从原型到原型链.fad514a5.js"><link rel="prefetch" href="/study_notes/assets/js/page-JavaScript规范.d0ae6fd7.js"><link rel="prefetch" href="/study_notes/assets/js/page-Map.0f06da63.js"><link rel="prefetch" href="/study_notes/assets/js/page-Module.7fced263.js"><link rel="prefetch" href="/study_notes/assets/js/page-MySQL.af7fa8e3.js"><link rel="prefetch" href="/study_notes/assets/js/page-MySQL常用命令.df2cb3dc.js"><link rel="prefetch" href="/study_notes/assets/js/page-MySQL数据库设计规范.f4971667.js"><link rel="prefetch" href="/study_notes/assets/js/page-MySQL的安装与卸载.d07cb8ec.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx.0bdee273.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx安全访问控制.568016ea.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx常用命令.84b93070.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx文件列表功能.d81c12d4.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx的卸载.802cf98f.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx的安装.aa69439d.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx部署Https安全认证.be316554.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx部署前后端分离项目.00b497ed.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx限流常用模块.21d5940d.js"><link rel="prefetch" href="/study_notes/assets/js/page-Nginx页面安全认证.4ae829a1.js"><link rel="prefetch" href="/study_notes/assets/js/page-Ngixn配置文件模板.6aa6eed3.js"><link rel="prefetch" href="/study_notes/assets/js/page-Ngixn配置文件详解.33f3617d.js"><link rel="prefetch" href="/study_notes/assets/js/page-Number.b857f850.js"><link rel="prefetch" href="/study_notes/assets/js/page-ObjectfromEntries().db8cf77f.js"><link rel="prefetch" href="/study_notes/assets/js/page-Object扩展.e6864dd9.js"><link rel="prefetch" href="/study_notes/assets/js/page-Promise.fce45898.js"><link rel="prefetch" href="/study_notes/assets/js/page-PromiseallSettled().79881703.js"><link rel="prefetch" href="/study_notes/assets/js/page-Promiseany()和AggregateError.d6fcb972.js"><link rel="prefetch" href="/study_notes/assets/js/page-Promiseprototypefinally().d73d2a53.js"><link rel="prefetch" href="/study_notes/assets/js/page-Proxy.337a9b4a.js"><link rel="prefetch" href="/study_notes/assets/js/page-Python.77294b59.js"><link rel="prefetch" href="/study_notes/assets/js/page-React.8eae8692.js"><link rel="prefetch" href="/study_notes/assets/js/page-ReactJSX.fcf43709.js"><link rel="prefetch" href="/study_notes/assets/js/page-React基础.cb43b91c.js"><link rel="prefetch" href="/study_notes/assets/js/page-Reflect.a645e473.js"><link rel="prefetch" href="/study_notes/assets/js/page-RegExp扩展.24b625ed.js"><link rel="prefetch" href="/study_notes/assets/js/page-Set.58b946c9.js"><link rel="prefetch" href="/study_notes/assets/js/page-String扩展.adb5cf78.js"><link rel="prefetch" href="/study_notes/assets/js/page-Symbol.d33244cf.js"><link rel="prefetch" href="/study_notes/assets/js/page-Symbol扩展.2cffd680.js"><link rel="prefetch" href="/study_notes/assets/js/page-TypeScript.276e0e3f.js"><link rel="prefetch" href="/study_notes/assets/js/page-V8引擎的工作原理.14c4761c.js"><link rel="prefetch" href="/study_notes/assets/js/page-Vue2源码解读.6a43beaf.js"><link rel="prefetch" href="/study_notes/assets/js/page-Vue3源码中的基础工具函数.905208fa.js"><link rel="prefetch" href="/study_notes/assets/js/page-Vuejs.89f0cf1f.js"><link rel="prefetch" href="/study_notes/assets/js/page-Vue项目规范.42ad0851.js"><link rel="prefetch" href="/study_notes/assets/js/page-Webpack5.7a725e15.js"><link rel="prefetch" href="/study_notes/assets/js/page-asyncawait.4c60ef13.js"><link rel="prefetch" href="/study_notes/assets/js/page-clone速度过慢.5222f41e.js"><link rel="prefetch" href="/study_notes/assets/js/page-commit信息写错想要修改.208a46fe.js"><link rel="prefetch" href="/study_notes/assets/js/page-forawaitof.171fe158.js"><link rel="prefetch" href="/study_notes/assets/js/page-gitrebase的两种用法.0fc08780.js"><link rel="prefetch" href="/study_notes/assets/js/page-globalThis.f43ccd04.js"><link rel="prefetch" href="/study_notes/assets/js/page-js异步解决方案.7a749280.js"><link rel="prefetch" href="/study_notes/assets/js/page-let和const.2b2d13d2.js"><link rel="prefetch" href="/study_notes/assets/js/page-pull时发现代码冲突，如何解决.68994536.js"><link rel="prefetch" href="/study_notes/assets/js/page-this指向.cdd41a78.js"><link rel="prefetch" href="/study_notes/assets/js/page-事件循环机制，微任务和宏任务的关系.e0fdd385.js"><link rel="prefetch" href="/study_notes/assets/js/page-产品与人性28个心理学效应.28a1ed10.js"><link rel="prefetch" href="/study_notes/assets/js/page-代码风格.469d79cb.js"><link rel="prefetch" href="/study_notes/assets/js/page-任意类型与未知类型.6127e30d.js"><link rel="prefetch" href="/study_notes/assets/js/page-伪元素和伪类.c9881e99.js"><link rel="prefetch" href="/study_notes/assets/js/page-作用域.816b1603.js"><link rel="prefetch" href="/study_notes/assets/js/page-使用Fabric执行SSH.573559fb.js"><link rel="prefetch" href="/study_notes/assets/js/page-使用Paramiko执行SSH.78bb1c1c.js"><link rel="prefetch" href="/study_notes/assets/js/page-使用openpyxl处理新版本Excel.7c138a81.js"><link rel="prefetch" href="/study_notes/assets/js/page-使用smtplib发送电子邮件.1b460b42.js"><link rel="prefetch" href="/study_notes/assets/js/page-使用subprocess执行cmd.474d7007.js"><link rel="prefetch" href="/study_notes/assets/js/page-使用telnetlib执行Telnet.dbbcf533.js"><link rel="prefetch" href="/study_notes/assets/js/page-使用xlrd处理旧版本Excel.7327dfe2.js"><link rel="prefetch" href="/study_notes/assets/js/page-修订FunctionprototypetoString().eea7ad0d.js"><link rel="prefetch" href="/study_notes/assets/js/page-关于本站.28c4ee92.js"><link rel="prefetch" href="/study_notes/assets/js/page-函数参数.1f8129fe.js"><link rel="prefetch" href="/study_notes/assets/js/page-函数柯里化.bc26b572.js"><link rel="prefetch" href="/study_notes/assets/js/page-函数类型.d22c6b41.js"><link rel="prefetch" href="/study_notes/assets/js/page-函数装饰器.2166f65e.js"><link rel="prefetch" href="/study_notes/assets/js/page-刚刚commit的代码，发现写错了.b3c64173.js"><link rel="prefetch" href="/study_notes/assets/js/page-刚刚commit，发现漏提交了文件.69256bfb.js"><link rel="prefetch" href="/study_notes/assets/js/page-刚刚的commit有误，想要撤回.e27ee16d.js"><link rel="prefetch" href="/study_notes/assets/js/page-刚刚的push有误，想要撤回.bda3d641.js"><link rel="prefetch" href="/study_notes/assets/js/page-前端路由原理.b88899a2.js"><link rel="prefetch" href="/study_notes/assets/js/page-动态引入.3da91e04.js"><link rel="prefetch" href="/study_notes/assets/js/page-原型与原型链.06b5cd0d.js"><link rel="prefetch" href="/study_notes/assets/js/page-变量与常量.03219038.js"><link rel="prefetch" href="/study_notes/assets/js/page-可选的CatchBinding.ccb0201f.js"><link rel="prefetch" href="/study_notes/assets/js/page-可选链Optionalchaining.910caa17.js"><link rel="prefetch" href="/study_notes/assets/js/page-同步与异步.ba465fbd.js"><link rel="prefetch" href="/study_notes/assets/js/page-后台管理系统的权限控制与管理.048ab4ca.js"><link rel="prefetch" href="/study_notes/assets/js/page-响应式原理.bc2ac335.js"><link rel="prefetch" href="/study_notes/assets/js/page-垃圾回收.e4ab8818.js"><link rel="prefetch" href="/study_notes/assets/js/page-基本配置.14d67e73.js"><link rel="prefetch" href="/study_notes/assets/js/page-基础用法要点.8bbd3080.js"><link rel="prefetch" href="/study_notes/assets/js/page-声明函数的六种方式.58446b40.js"><link rel="prefetch" href="/study_notes/assets/js/page-复杂度分析.6fb0a2bd.js"><link rel="prefetch" href="/study_notes/assets/js/page-大文件分片上传和断点续传.4083891b.js"><link rel="prefetch" href="/study_notes/assets/js/page-如何使用GitFlow工作流进行团队协作.99d6a3a8.js"><link rel="prefetch" href="/study_notes/assets/js/page-如何修改历史commits中的用户名和邮箱.25501b60.js"><link rel="prefetch" href="/study_notes/assets/js/page-如何参与开源项目-提交PR与更新Fork分支.043ae2dc.js"><link rel="prefetch" href="/study_notes/assets/js/page-如何迁移仓库并保留commits记录.34323a61.js"><link rel="prefetch" href="/study_notes/assets/js/page-定位（position）.56dbc73f.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现Objectcreate方法.801d7af2.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现apply方法.72890de7.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现bind方法.e9a5b8a0.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现call方法.e2ee9e55.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现instanceof运算符.6b1e8e1c.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现new运算符.dc8cf1a0.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现浅克隆（shallowClone）.007cdabd.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现深克隆（deepClone）.46de0b0f.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现符合PromisesA+规范的Promise.13b7a4f4.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现节流函数（throttle）.574504fe.js"><link rel="prefetch" href="/study_notes/assets/js/page-实现防抖函数（debounce）.3635a6bf.js"><link rel="prefetch" href="/study_notes/assets/js/page-对象类型：接口.39c44a74.js"><link rel="prefetch" href="/study_notes/assets/js/page-对象遍历的几种方式.759ca793.js"><link rel="prefetch" href="/study_notes/assets/js/page-尾逗号Trailingcommas.60a0a472.js"><link rel="prefetch" href="/study_notes/assets/js/page-布尔、数值与字符串.6625642f.js"><link rel="prefetch" href="/study_notes/assets/js/page-常用命令清单.18f34cc4.js"><link rel="prefetch" href="/study_notes/assets/js/page-常用工具网站.aef4962a.js"><link rel="prefetch" href="/study_notes/assets/js/page-幂运算符.cf0a315a.js"><link rel="prefetch" href="/study_notes/assets/js/page-性能优化-产出代码.9b246407.js"><link rel="prefetch" href="/study_notes/assets/js/page-性能优化-构建速度.dabb444a.js"><link rel="prefetch" href="/study_notes/assets/js/page-执行上下文和调用栈.3d27e548.js"><link rel="prefetch" href="/study_notes/assets/js/page-接口设计.39e50fd3.js"><link rel="prefetch" href="/study_notes/assets/js/page-数字分隔符.de24083e.js"><link rel="prefetch" href="/study_notes/assets/js/page-数据类型.1ada6cf0.js"><link rel="prefetch" href="/study_notes/assets/js/page-数据类型简介.71887539.js"><link rel="prefetch" href="/study_notes/assets/js/page-数据结构与算法.79143f3b.js"><link rel="prefetch" href="/study_notes/assets/js/page-数据结构之数组.d5d922dd.js"><link rel="prefetch" href="/study_notes/assets/js/page-数据结构之链表.8ab57075.js"><link rel="prefetch" href="/study_notes/assets/js/page-数组和元组.e938b5d5.js"><link rel="prefetch" href="/study_notes/assets/js/page-数组遍历的几种方式.1ddb91d5.js"><link rel="prefetch" href="/study_notes/assets/js/page-文案指南.bb1393c7.js"><link rel="prefetch" href="/study_notes/assets/js/page-文档规范.d3880534.js"><link rel="prefetch" href="/study_notes/assets/js/page-新的逻辑操作符.8750adc6.js"><link rel="prefetch" href="/study_notes/assets/js/page-更新日志.e2c72f11.js"><link rel="prefetch" href="/study_notes/assets/js/page-最佳实践-通用模板.a19c0a84.js"><link rel="prefetch" href="/study_notes/assets/js/page-未完待续.7d3dd38f.js"><link rel="prefetch" href="/study_notes/assets/js/page-枚举.56cea6bf.js"><link rel="prefetch" href="/study_notes/assets/js/page-栈空间和堆空间.9af50065.js"><link rel="prefetch" href="/study_notes/assets/js/page-核心概念.52d7c95c.js"><link rel="prefetch" href="/study_notes/assets/js/page-模板编译.6139175a.js"><link rel="prefetch" href="/study_notes/assets/js/page-正向代理与反向代理.7187d711.js"><link rel="prefetch" href="/study_notes/assets/js/page-泛型.771ad7a4.js"><link rel="prefetch" href="/study_notes/assets/js/page-浅克隆与深克隆.4a0e963b.js"><link rel="prefetch" href="/study_notes/assets/js/page-浏览器内核与JavaScript引擎.c14ec78c.js"><link rel="prefetch" href="/study_notes/assets/js/page-浏览器宏观认识.51ea404d.js"><link rel="prefetch" href="/study_notes/assets/js/page-浏览器工作原理.02e75055.js"><link rel="prefetch" href="/study_notes/assets/js/page-浮动（float）.877ad530.js"><link rel="prefetch" href="/study_notes/assets/js/page-渲染引擎的工作原理.e0751837.js"><link rel="prefetch" href="/study_notes/assets/js/page-源码阅读与学习.0d9b0fe8.js"><link rel="prefetch" href="/study_notes/assets/js/page-版本号定义规范.69369b33.js"><link rel="prefetch" href="/study_notes/assets/js/page-版本控制.ce3f3b70.js"><link rel="prefetch" href="/study_notes/assets/js/page-盒模型.778dbdde.js"><link rel="prefetch" href="/study_notes/assets/js/page-空值、未定义和不存在.b4f0b4d1.js"><link rel="prefetch" href="/study_notes/assets/js/page-空值合并运算符.352465a9.js"><link rel="prefetch" href="/study_notes/assets/js/page-类和实例.7d4ac541.js"><link rel="prefetch" href="/study_notes/assets/js/page-类成员保护.7661fed2.js"><link rel="prefetch" href="/study_notes/assets/js/page-类的继承.9eea899f.js"><link rel="prefetch" href="/study_notes/assets/js/page-类私有域.235324fa.js"><link rel="prefetch" href="/study_notes/assets/js/page-组件渲染与更新.3e1bcc59.js"><link rel="prefetch" href="/study_notes/assets/js/page-经典布局.3eaed83e.js"><link rel="prefetch" href="/study_notes/assets/js/page-继承的八种方式.4f455cf5.js"><link rel="prefetch" href="/study_notes/assets/js/page-编译器与解释器.753b73e1.js"><link rel="prefetch" href="/study_notes/assets/js/page-联合和字面量.ef20bbd3.js"><link rel="prefetch" href="/study_notes/assets/js/page-虚拟DOM与diff算法.30dfea2b.js"><link rel="prefetch" href="/study_notes/assets/js/page-解决方案.62ed8603.js"><link rel="prefetch" href="/study_notes/assets/js/page-解构赋值.71b495f1.js"><link rel="prefetch" href="/study_notes/assets/js/page-认知偏差知识手册.83cbcdbc.js"><link rel="prefetch" href="/study_notes/assets/js/page-语义类标签.05c33ac5.js"><link rel="prefetch" href="/study_notes/assets/js/page-语法规范.2cfaaf57.js"><link rel="prefetch" href="/study_notes/assets/js/page-课外学习.6d98c670.js"><link rel="prefetch" href="/study_notes/assets/js/page-调用函数的四种方式.1ad1543a.js"><link rel="prefetch" href="/study_notes/assets/js/page-负载均衡.1dbbe10a.js"><link rel="prefetch" href="/study_notes/assets/js/page-选择器与样式优先级.ee594ff9.js"><link rel="prefetch" href="/study_notes/assets/js/page-配置密钥实现免密操作.268c9934.js"><link rel="prefetch" href="/study_notes/assets/js/page-长度和单位.0450d7a0.js"><link rel="prefetch" href="/study_notes/assets/js/page-闭包.796a6f33.js"><link rel="prefetch" href="/study_notes/assets/js/page-面向对象编程.68d3aca5.js"><link rel="prefetch" href="/study_notes/assets/js/page-高级用法特性.08045a65.js"><link rel="prefetch" href="/study_notes/assets/js/page-高级配置.794477a2.js"><link rel="prefetch" href="/study_notes/assets/js/vendors~layout-Slide.69ece48c.js">
+    <link rel="stylesheet" href="/study_notes/assets/css/0.styles.6a020005.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container has-navbar has-sidebar has-anchor"><header class="navbar"><!----> <div class="content__navbar-start"></div> <button title="Sidebar Button" class="sidebar-button"><span class="icon"></span></button> <a href="/study_notes/" class="home-link router-link-active"><img src="/study_notes/img/logo.png" alt="Hello World" class="logo"> <!----> <span class="site-name can-hide">Hello World</span></a> <!----> <div class="content__navbar-center"></div> <div class="links"><!----> <div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="技术规范" class="dropdown-title"><span class="title"><!---->
+        技术规范
+      </span> <span class="arrow"></span></button> <ul class="nav-dropdown"><li class="dropdown-item"><a href="/study_notes/style-guide/version-control/" class="nav-link"><!---->
+  版本控制
+</a></li><li class="dropdown-item"><a href="/study_notes/style-guide/program/" class="nav-link"><!---->
+  代码风格
+</a></li><li class="dropdown-item"><a href="/study_notes/style-guide/document/" class="nav-link"><!---->
+  文档规范
+</a></li><li class="dropdown-item"><a href="/study_notes/style-guide/apis/" class="nav-link"><!---->
+  接口设计
+</a></li><li class="dropdown-item"><a href="/study_notes/style-guide/product/" class="nav-link"><!---->
+  文案指南
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端知识" class="dropdown-title"><span class="title"><!---->
+        前端知识
+      </span> <span class="arrow"></span></button> <ul class="nav-dropdown"><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>基础</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/html/" class="nav-link"><!---->
+  HTML
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/css/" class="nav-link"><!---->
+  CSS
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/javascript/" class="nav-link"><!---->
+  JavaScript
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>进阶</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/es6-and-beyond/" class="nav-link"><!---->
+  ECMAScript 6+
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/typescript/" class="nav-link"><!---->
+  TypeScript
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/browser/" class="nav-link"><!---->
+  浏览器工作原理
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>手写</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/javascript-handwritten/" class="nav-link"><!---->
+  JS 手写
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="工程化" class="dropdown-title"><span class="title"><!---->
+        工程化
+      </span> <span class="arrow"></span></button> <ul class="nav-dropdown"><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>框架</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-engineering/vuejs/" class="nav-link"><!---->
+  Vue.js
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-engineering/react/" class="nav-link"><!---->
+  React
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>工具</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-engineering/webpack5/" class="nav-link"><!---->
+  Webpack
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="必知必会" class="dropdown-title"><span class="title"><!---->
+        必知必会
+      </span> <span class="arrow"></span></button> <ul class="nav-dropdown"><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>日常使用</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/basic-skills/git/" class="nav-link"><!---->
+  Git
+</a></li><li class="dropdown-subitem"><a href="/study_notes/basic-skills/nginx/" class="nav-link router-link-active active"><!---->
+  Nginx
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>数据库/中间件</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/basic-skills/mysql/" class="nav-link"><!---->
+  MySQL
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="深入学习" class="dropdown-title"><span class="title"><!---->
+        深入学习
+      </span> <span class="arrow"></span></button> <ul class="nav-dropdown"><li class="dropdown-item"><a href="/study_notes/in-depth-learning/algorithm/" class="nav-link"><!---->
+  数据结构与算法
+</a></li><li class="dropdown-item"><a href="/study_notes/in-depth-learning/source-code/" class="nav-link"><!---->
+  源码阅读与学习
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目相关" class="dropdown-title"><span class="title"><!---->
+        项目相关
+      </span> <span class="arrow"></span></button> <ul class="nav-dropdown"><li class="dropdown-item"><a href="/study_notes/project/" class="nav-link"><!---->
+  解决方案
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="其它" class="dropdown-title"><span class="title"><!---->
+        其它
+      </span> <span class="arrow"></span></button> <ul class="nav-dropdown"><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>站内</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/extracurricular/" class="nav-link"><!---->
+  课外学习
+</a></li><li class="dropdown-subitem"><a href="/study_notes/ecs/" class="nav-link"><!---->
+  ecs之旅
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>站外</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://keyl-liucong.github.io/study_notes" target="_blank" rel="noopener noreferrer" class="nav-link external"><!---->
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-subitem"><a href="https://github.com/keyL-liucong" target="_blank" rel="noopener noreferrer" class="nav-link external"><!---->
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></li></ul></div></div></nav> <!----> <!----> <!----> <div class="content__navbar-end"></div></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><!----> <!----> <div class="content__sidebar-top"></div> <nav class="sidebar-nav-links"><div class="nav-item"><div class="mobile-dropdown-wrapper"><button type="button" aria-label="技术规范" class="dropdown-title"><span class="title"><!---->
+      技术规范
+    </span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/study_notes/style-guide/version-control/" class="nav-link"><!---->
+  版本控制
+</a></li><li class="dropdown-item"><!----> <a href="/study_notes/style-guide/program/" class="nav-link"><!---->
+  代码风格
+</a></li><li class="dropdown-item"><!----> <a href="/study_notes/style-guide/document/" class="nav-link"><!---->
+  文档规范
+</a></li><li class="dropdown-item"><!----> <a href="/study_notes/style-guide/apis/" class="nav-link"><!---->
+  接口设计
+</a></li><li class="dropdown-item"><!----> <a href="/study_notes/style-guide/product/" class="nav-link"><!---->
+  文案指南
+</a></li></ul></div></div><div class="nav-item"><div class="mobile-dropdown-wrapper"><button type="button" aria-label="前端知识" class="dropdown-title"><span class="title"><!---->
+      前端知识
+    </span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>基础</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/html/" class="nav-link"><!---->
+  HTML
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/css/" class="nav-link"><!---->
+  CSS
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/javascript/" class="nav-link"><!---->
+  JavaScript
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>进阶</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/es6-and-beyond/" class="nav-link"><!---->
+  ECMAScript 6+
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/typescript/" class="nav-link"><!---->
+  TypeScript
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/browser/" class="nav-link"><!---->
+  浏览器工作原理
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>手写</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-knowledge/javascript-handwritten/" class="nav-link"><!---->
+  JS 手写
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="mobile-dropdown-wrapper"><button type="button" aria-label="工程化" class="dropdown-title"><span class="title"><!---->
+      工程化
+    </span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>框架</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-engineering/vuejs/" class="nav-link"><!---->
+  Vue.js
+</a></li><li class="dropdown-subitem"><a href="/study_notes/frontend-engineering/react/" class="nav-link"><!---->
+  React
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>工具</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/frontend-engineering/webpack5/" class="nav-link"><!---->
+  Webpack
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="mobile-dropdown-wrapper"><button type="button" aria-label="必知必会" class="dropdown-title"><span class="title"><!---->
+      必知必会
+    </span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>日常使用</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/basic-skills/git/" class="nav-link"><!---->
+  Git
+</a></li><li class="dropdown-subitem"><a href="/study_notes/basic-skills/nginx/" class="nav-link router-link-active active"><!---->
+  Nginx
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>数据库/中间件</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/basic-skills/mysql/" class="nav-link"><!---->
+  MySQL
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="mobile-dropdown-wrapper"><button type="button" aria-label="深入学习" class="dropdown-title"><span class="title"><!---->
+      深入学习
+    </span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/study_notes/in-depth-learning/algorithm/" class="nav-link"><!---->
+  数据结构与算法
+</a></li><li class="dropdown-item"><!----> <a href="/study_notes/in-depth-learning/source-code/" class="nav-link"><!---->
+  源码阅读与学习
+</a></li></ul></div></div><div class="nav-item"><div class="mobile-dropdown-wrapper"><button type="button" aria-label="项目相关" class="dropdown-title"><span class="title"><!---->
+      项目相关
+    </span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/study_notes/project/" class="nav-link"><!---->
+  解决方案
+</a></li></ul></div></div><div class="nav-item"><div class="mobile-dropdown-wrapper"><button type="button" aria-label="其它" class="dropdown-title"><span class="title"><!---->
+      其它
+    </span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>站内</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/study_notes/extracurricular/" class="nav-link"><!---->
+  课外学习
+</a></li><li class="dropdown-subitem"><a href="/study_notes/ecs/" class="nav-link"><!---->
+  ecs之旅
+</a></li></ul></li><li class="dropdown-item"><h4 class="dropdown-subtitle"><span>站外</span></h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="https://keyl-liucong.github.io/study_notes" target="_blank" rel="noopener noreferrer" class="nav-link external"><!---->
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-subitem"><a href="https://github.com/keyL-liucong" target="_blank" rel="noopener noreferrer" class="nav-link external"><!---->
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></li></ul></div></div> <!----></nav> <!----> <div class="content__sidebar-center"></div> <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><!----> <span class="title">Nginx 用法整理</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/study_notes/basic-skills/nginx/forward-proxy-and-reverse-proxy/" class="sidebar-link">正向代理与反向代理</a></li><li><a href="/study_notes/basic-skills/nginx/load-balancing/" class="sidebar-link">负载均衡</a></li><li><a href="/study_notes/basic-skills/nginx/installation-of-nginx/" class="sidebar-link">Nginx 的安装</a></li><li><a href="/study_notes/basic-skills/nginx/uninstallation-of-nginx/" class="sidebar-link">Nginx 的卸载</a></li><li><a href="/study_notes/basic-skills/nginx/common-commands/" class="sidebar-link">Nginx 常用命令</a></li><li><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/" aria-current="page" class="active sidebar-link">Nginx 设置开机自启</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#ubuntu-设置开机自启" class="sidebar-link">Ubuntu 设置开机自启</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#创建启动脚本" class="sidebar-link heading3">创建启动脚本</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#修改部分参数" class="sidebar-link heading3">修改部分参数</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加执行权限" class="sidebar-link heading3">添加执行权限</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加至开机自启动" class="sidebar-link heading3">添加至开机自启动</a></li></ul></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#centos-6-x-设置开机自启" class="sidebar-link">CentOS 6.x 设置开机自启</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#创建启动脚本-2" class="sidebar-link heading3">创建启动脚本</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#修改部分参数-2" class="sidebar-link heading3">修改部分参数</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加执行权限-2" class="sidebar-link heading3">添加执行权限</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加至开机自启动-2" class="sidebar-link heading3">添加至开机自启动</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#开机自启脚本提供的快捷命令" class="sidebar-link heading3">开机自启脚本提供的快捷命令</a></li></ul></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#centos-7-x-设置开机自启" class="sidebar-link">CentOS 7.x 设置开机自启</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#建立服务文件" class="sidebar-link heading3">建立服务文件</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#修改部分参数-3" class="sidebar-link heading3">修改部分参数</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加执行权限-3" class="sidebar-link heading3">添加执行权限</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加至开机自启动-3" class="sidebar-link heading3">添加至开机自启动</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#nginx-服务管理" class="sidebar-link heading3">Nginx 服务管理</a></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#systemd-提供的一些命令" class="sidebar-link heading3">systemd 提供的一些命令</a></li></ul></li><li class="sidebar-sub-header"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#参考文档" class="sidebar-link">参考文档</a></li></ul></li><li><a href="/study_notes/basic-skills/nginx/config-file-params-explanation/" class="sidebar-link">Nginx 配置文件详解</a></li><li><a href="/study_notes/basic-skills/nginx/config-file-generic-template/" class="sidebar-link">Nginx 配置文件模板</a></li><li><a href="/study_notes/basic-skills/nginx/ngx-http-access-module/" class="sidebar-link">Nginx 安全访问控制</a></li><li><a href="/study_notes/basic-skills/nginx/ngx-http-autoindex-module/" class="sidebar-link">Nginx 文件列表功能</a></li><li><a href="/study_notes/basic-skills/nginx/ngx-http-auth-basic-module/" class="sidebar-link">Nginx 页面安全认证</a></li><li><a href="/study_notes/basic-skills/nginx/deploy-https-security-auth/" class="sidebar-link">Nginx 部署 Https 安全认证</a></li><li><a href="/study_notes/basic-skills/nginx/traffic-limiting-modules/" class="sidebar-link">Nginx 限流常用模块</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><!----> <span class="title">Nginx 部署方案</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/study_notes/basic-skills/nginx/practice-in-front-end-separation-project/" class="sidebar-link">Nginx 部署前后端分离项目</a></li></ul></section></li></ul> <!----> <div class="content__sidebar-bottom"></div> <!----></aside> <main class="page"><nav class="breadcrumb disable"><!----></nav> <!----> <div class="content__page-top"></div> <div vocab="https://schema.org/" typeof="Article" class="page-title"><h1><!----> <span property="headline">Nginx 设置开机自启</span></h1> <!----> <!----> <hr></div> <div class="anchor-place-holder"><aside id="anchor"><div class="anchor-wrapper"><ul class="anchor-list"><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#ubuntu-设置开机自启" class="anchor-link heading2"><div>Ubuntu 设置开机自启</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#创建启动脚本" class="anchor-link heading3"><div>创建启动脚本</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#修改部分参数" class="anchor-link heading3"><div>修改部分参数</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加执行权限" class="anchor-link heading3"><div>添加执行权限</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加至开机自启动" class="anchor-link heading3"><div>添加至开机自启动</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#centos-6-x-设置开机自启" class="anchor-link heading2"><div>CentOS 6.x 设置开机自启</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#创建启动脚本-2" class="anchor-link heading3"><div>创建启动脚本</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#修改部分参数-2" class="anchor-link heading3"><div>修改部分参数</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加执行权限-2" class="anchor-link heading3"><div>添加执行权限</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加至开机自启动-2" class="anchor-link heading3"><div>添加至开机自启动</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#开机自启脚本提供的快捷命令" class="anchor-link heading3"><div>开机自启脚本提供的快捷命令</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#centos-7-x-设置开机自启" class="anchor-link heading2"><div>CentOS 7.x 设置开机自启</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#建立服务文件" class="anchor-link heading3"><div>建立服务文件</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#修改部分参数-3" class="anchor-link heading3"><div>修改部分参数</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加执行权限-3" class="anchor-link heading3"><div>添加执行权限</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#添加至开机自启动-3" class="anchor-link heading3"><div>添加至开机自启动</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#nginx-服务管理" class="anchor-link heading3"><div>Nginx 服务管理</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#systemd-提供的一些命令" class="anchor-link heading3"><div>systemd 提供的一些命令</div></a></li><li class="anchor"><a href="/study_notes/basic-skills/nginx/set-auto-start-after-server-reboot/#参考文档" class="anchor-link heading2"><div>参考文档</div></a></li></ul></div></aside></div> <!----> <div class="content__content-top"></div> <div class="theme-default-content content__default"><h1 id="nginx-设置开机自启"><a href="#nginx-设置开机自启" class="header-anchor">#</a> Nginx 设置开机自启</h1> <p>在生产环境中，如果我们的服务器意外重启，此时要是 Nginx 没有随服务器启动起来，我们的 Web 站点就会是无应答的状态，这会给我们带来不同程度损失。</p> <p>因此我们需要设置 Nginx 开机自启。</p> <h2 id="ubuntu-设置开机自启"><a href="#ubuntu-设置开机自启" class="header-anchor">#</a> Ubuntu 设置开机自启</h2> <blockquote><p>以下所有命令，如果你是 root 账户，直接执行即可，不是的话前面加 <code>sudo</code> 获取权限。</p></blockquote> <p>在 Ubuntu 和 Debian 下，我们通过 update-rc.d 设置 Nginx 的开机启动。</p> <p>经实验，以下步骤适用于 Ubuntu 16.04、18.04、20.04 版本的系统。</p> <h3 id="创建启动脚本"><a href="#创建启动脚本" class="header-anchor">#</a> 创建启动脚本</h3> <p>在 Linux 系统的 <code>/etc/init.d/</code> 目录下创建 <code>nginx</code> 文件：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token function">vim</span> /etc/init.d/nginx
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>往该文件内写入以下脚本内容（该脚本内容来自网络）：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token shebang important">#! /bin/sh</span>
+<span class="token comment"># chkconfig: 2345 55 25</span>
+<span class="token comment"># Description: Startup script for nginx webserver on Debian. Place in /etc/init.d and</span>
+<span class="token comment"># run 'update-rc.d -f nginx defaults', or use the appropriate command on your</span>
+<span class="token comment"># distro. For CentOS/Redhat run: 'chkconfig --add nginx'</span>
+
+<span class="token comment">### BEGIN INIT INFO</span>
+<span class="token comment"># Provides:          nginx</span>
+<span class="token comment"># Required-Start:    $all</span>
+<span class="token comment"># Required-Stop:     $all</span>
+<span class="token comment"># Default-Start:     2 3 4 5</span>
+<span class="token comment"># Default-Stop:      0 1 6</span>
+<span class="token comment"># Short-Description: starts the nginx web server</span>
+<span class="token comment"># Description:       starts nginx using start-stop-daemon</span>
+<span class="token comment">### END INIT INFO</span>
+
+<span class="token comment"># Author:   licess</span>
+<span class="token comment"># website:  http://lnmp.org</span>
+
+<span class="token assign-left variable"><span class="token environment constant">PATH</span></span><span class="token operator">=</span>/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+<span class="token assign-left variable">NAME</span><span class="token operator">=</span>nginx
+<span class="token assign-left variable">NGINX_BIN</span><span class="token operator">=</span>/usr/local/nginx/sbin/<span class="token variable">$NAME</span>
+<span class="token assign-left variable">CONFIGFILE</span><span class="token operator">=</span>/usr/local/nginx/conf/<span class="token variable">$NAME</span>.conf
+<span class="token assign-left variable">PIDFILE</span><span class="token operator">=</span>/usr/local/nginx/logs/<span class="token variable">$NAME</span>.pid
+
+<span class="token keyword">case</span> <span class="token string">&quot;<span class="token variable">$1</span>&quot;</span> <span class="token keyword">in</span>
+    start<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> -n <span class="token string">&quot;Starting <span class="token variable">$NAME</span>... &quot;</span>
+
+        <span class="token keyword">if</span> <span class="token function">netstat</span> -tnpl <span class="token operator">|</span> <span class="token function">grep</span> -q nginx<span class="token punctuation">;</span><span class="token keyword">then</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot;<span class="token variable">$NAME</span> (pid <span class="token variable"><span class="token variable">`</span>pidof $NAME<span class="token variable">`</span></span>) already running.&quot;</span>
+            <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token keyword">fi</span>
+
+        <span class="token variable">$NGINX_BIN</span> -c <span class="token variable">$CONFIGFILE</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token string">&quot;<span class="token variable">$?</span>&quot;</span> <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">]</span> <span class="token punctuation">;</span> <span class="token keyword">then</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot; failed&quot;</span>
+            <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token keyword">else</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot; done&quot;</span>
+        <span class="token keyword">fi</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+
+    stop<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> -n <span class="token string">&quot;Stoping <span class="token variable">$NAME</span>... &quot;</span>
+
+        <span class="token keyword">if</span> <span class="token operator">!</span> <span class="token function">netstat</span> -tnpl <span class="token operator">|</span> <span class="token function">grep</span> -q nginx<span class="token punctuation">;</span> <span class="token keyword">then</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot;<span class="token variable">$NAME</span> is not running.&quot;</span>
+            <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token keyword">fi</span>
+
+        <span class="token variable">$NGINX_BIN</span> -s stop
+
+        <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token string">&quot;<span class="token variable">$?</span>&quot;</span> <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">]</span> <span class="token punctuation">;</span> <span class="token keyword">then</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot; failed. Use force-quit&quot;</span>
+            <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token keyword">else</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot; done&quot;</span>
+        <span class="token keyword">fi</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+
+    status<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token function">netstat</span> -tnpl <span class="token operator">|</span> <span class="token function">grep</span> -q nginx<span class="token punctuation">;</span> <span class="token keyword">then</span>
+            <span class="token assign-left variable">PID</span><span class="token operator">=</span><span class="token variable"><span class="token variable">`</span>pidof nginx<span class="token variable">`</span></span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot;<span class="token variable">$NAME</span> (pid <span class="token variable">$PID</span>) is running...&quot;</span>
+        <span class="token keyword">else</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot;<span class="token variable">$NAME</span> is stopped&quot;</span>
+            <span class="token builtin class-name">exit</span> <span class="token number">0</span>
+        <span class="token keyword">fi</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+
+    force-quit<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> -n <span class="token string">&quot;Terminating <span class="token variable">$NAME</span>... &quot;</span>
+
+        <span class="token keyword">if</span> <span class="token operator">!</span> <span class="token function">netstat</span> -tnpl <span class="token operator">|</span> <span class="token function">grep</span> -q nginx<span class="token punctuation">;</span> <span class="token keyword">then</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot;<span class="token variable">$NAME</span> is not running.&quot;</span>
+            <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token keyword">fi</span>
+
+        <span class="token function">kill</span> <span class="token variable"><span class="token variable">`</span>pidof $NAME<span class="token variable">`</span></span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token string">&quot;<span class="token variable">$?</span>&quot;</span> <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">]</span> <span class="token punctuation">;</span> <span class="token keyword">then</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot; failed&quot;</span>
+            <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token keyword">else</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot; done&quot;</span>
+        <span class="token keyword">fi</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+
+    restart<span class="token punctuation">)</span>
+        <span class="token variable">$0</span> stop
+        <span class="token function">sleep</span> <span class="token number">1</span>
+        <span class="token variable">$0</span> start
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+
+    reload<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> -n <span class="token string">&quot;Reload service <span class="token variable">$NAME</span>... &quot;</span>
+
+        <span class="token keyword">if</span> <span class="token function">netstat</span> -tnpl <span class="token operator">|</span> <span class="token function">grep</span> -q nginx<span class="token punctuation">;</span> <span class="token keyword">then</span>
+            <span class="token variable">$NGINX_BIN</span> -s reload
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot; done&quot;</span>
+        <span class="token keyword">else</span>
+            <span class="token builtin class-name">echo</span> <span class="token string">&quot;<span class="token variable">$NAME</span> is not running, can't reload.&quot;</span>
+            <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token keyword">fi</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+
+    configtest<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> -n <span class="token string">&quot;Test <span class="token variable">$NAME</span> configure files... &quot;</span>
+
+        <span class="token variable">$NGINX_BIN</span> -t
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+
+    *<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">&quot;Usage: <span class="token variable">$0</span> {start|stop|force-quit|restart|reload|status|configtest}&quot;</span>
+        <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">esac</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br></div></div><h3 id="修改部分参数"><a href="#修改部分参数" class="header-anchor">#</a> 修改部分参数</h3> <p>如果你的 Nginx 是通过编译安装的，则需要根据实际安装时的设置，修改启动脚本中的几个参数（大约在第）：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 如果是按照我方式编译安装的，则不用修改，默认参数值就是我的实际安装位置</span>
+<span class="token assign-left variable">NGINX_BIN</span><span class="token operator">=</span>/usr/local/nginx/sbin/<span class="token variable">$NAME</span>
+<span class="token assign-left variable">CONFIGFILE</span><span class="token operator">=</span>/usr/local/nginx/conf/<span class="token variable">$NAME</span>.conf
+<span class="token assign-left variable">PIDFILE</span><span class="token operator">=</span>/usr/local/nginx/logs/<span class="token variable">$NAME</span>.pid
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><h3 id="添加执行权限"><a href="#添加执行权限" class="header-anchor">#</a> 添加执行权限</h3> <p>上述脚本保存为 <code>/etc/init.d/nginx</code>，然后设置文件的执行权限：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 给所有用户给予可执行权限</span>
+<span class="token function">chmod</span> a+x /etc/init.d/nginx
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>至此就可以通过下面指令控制 Nginx 的启动、停止和重新加载了：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 启动</span>
+/etc/init.d/nginx start
+
+<span class="token comment"># 停止</span>
+/etc/init.d/nginx stop
+
+<span class="token comment"># 重新加载配置</span>
+/etc/init.d/nginx reload
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><h3 id="添加至开机自启动"><a href="#添加至开机自启动" class="header-anchor">#</a> 添加至开机自启动</h3> <p>现在将 Nginx 服务加入开机自启动：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 设置开机启动</span>
+<span class="token function">sudo</span> update-rc.d nginx defaults
+
+<span class="token comment"># 启动 Nginx</span>
+<span class="token function">sudo</span> /etc/init.d/nginx start
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>当然了，如果需要关闭开机启动的功能：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 取消开机启动</span>
+<span class="token function">sudo</span> update-rc.d -f nginx remove
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><h2 id="centos-6-x-设置开机自启"><a href="#centos-6-x-设置开机自启" class="header-anchor">#</a> CentOS 6.x 设置开机自启</h2> <blockquote><p>以下所有命令，如果你是 root 账户，直接执行即可，不是的话前面加 <code>sudo</code> 获取权限。</p></blockquote> <h3 id="创建启动脚本-2"><a href="#创建启动脚本-2" class="header-anchor">#</a> 创建启动脚本</h3> <p>在 Linux 系统的 <code>/etc/init.d/</code> 目录下创建 <code>nginx</code> 文件：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token function">vim</span> /etc/init.d/nginx
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>往该文件内写入以下脚本内容（该脚本内容来自<a href="https://www.nginx.com/resources/wiki/start/topics/examples/redhatnginxinit/" target="_blank" rel="noopener noreferrer">官方网站 - Red Hat NGINX Init Script<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>）：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token shebang important">#!/bin/sh</span>
+<span class="token comment">#</span>
+<span class="token comment"># nginx - this script starts and stops the nginx daemon</span>
+<span class="token comment">#</span>
+<span class="token comment"># chkconfig:   - 85 15</span>
+<span class="token comment"># description:  NGINX is an HTTP(S) server, HTTP(S) reverse \</span>
+<span class="token comment">#               proxy and IMAP/POP3 proxy server</span>
+<span class="token comment"># processname: nginx</span>
+<span class="token comment"># config:      /etc/nginx/nginx.conf</span>
+<span class="token comment"># config:      /etc/sysconfig/nginx</span>
+<span class="token comment"># pidfile:     /var/run/nginx.pid</span>
+
+<span class="token comment"># Source function library.</span>
+<span class="token builtin class-name">.</span> /etc/rc.d/init.d/functions
+
+<span class="token comment"># Source networking configuration.</span>
+<span class="token builtin class-name">.</span> /etc/sysconfig/network
+
+<span class="token comment"># Check that networking is up.</span>
+<span class="token punctuation">[</span> <span class="token string">&quot;<span class="token variable">$NETWORKING</span>&quot;</span> <span class="token operator">=</span> <span class="token string">&quot;no&quot;</span> <span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">exit</span> <span class="token number">0</span>
+
+<span class="token assign-left variable">nginx</span><span class="token operator">=</span><span class="token string">&quot;/usr/sbin/nginx&quot;</span>
+<span class="token assign-left variable">prog</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">basename</span> $nginx<span class="token variable">)</span></span>
+
+<span class="token assign-left variable">NGINX_CONF_FILE</span><span class="token operator">=</span><span class="token string">&quot;/etc/nginx/nginx.conf&quot;</span>
+
+<span class="token punctuation">[</span> -f /etc/sysconfig/nginx <span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">.</span> /etc/sysconfig/nginx
+
+<span class="token assign-left variable">lockfile</span><span class="token operator">=</span>/var/lock/subsys/nginx
+
+<span class="token function-name function">make_dirs</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token comment"># make required directories</span>
+   <span class="token assign-left variable">user</span><span class="token operator">=</span><span class="token variable"><span class="token variable">`</span>$nginx -V <span class="token operator"><span class="token file-descriptor important">2</span>&gt;</span><span class="token file-descriptor important">&amp;1</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token string">&quot;configure arguments:.*--user=&quot;</span> <span class="token operator">|</span> <span class="token function">sed</span> <span class="token string">'s/[^*]*--user=\([^ ]*\).*/\1/g'</span> -<span class="token variable">`</span></span>
+   <span class="token keyword">if</span> <span class="token punctuation">[</span> -n <span class="token string">&quot;<span class="token variable">$user</span>&quot;</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+      <span class="token keyword">if</span> <span class="token punctuation">[</span> -z <span class="token string">&quot;<span class="token variable"><span class="token variable">`</span><span class="token function">grep</span> $user /etc/passwd<span class="token variable">`</span></span>&quot;</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+         <span class="token function">useradd</span> -M -s /bin/nologin <span class="token variable">$user</span>
+      <span class="token keyword">fi</span>
+      <span class="token assign-left variable">options</span><span class="token operator">=</span><span class="token variable"><span class="token variable">`</span>$nginx -V <span class="token operator"><span class="token file-descriptor important">2</span>&gt;</span><span class="token file-descriptor important">&amp;1</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token string">'configure arguments:'</span><span class="token variable">`</span></span>
+      <span class="token keyword">for</span> <span class="token for-or-select variable">opt</span> <span class="token keyword">in</span> <span class="token variable">$options</span><span class="token punctuation">;</span> <span class="token keyword">do</span>
+          <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token variable"><span class="token variable">`</span><span class="token builtin class-name">echo</span> $opt <span class="token operator">|</span> <span class="token function">grep</span> <span class="token string">'.*-temp-path'</span><span class="token variable">`</span></span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+              <span class="token assign-left variable">value</span><span class="token operator">=</span><span class="token variable"><span class="token variable">`</span><span class="token builtin class-name">echo</span> $opt <span class="token operator">|</span> <span class="token function">cut</span> -d <span class="token string">&quot;=&quot;</span> -f <span class="token number">2</span><span class="token variable">`</span></span>
+              <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token operator">!</span> -d <span class="token string">&quot;<span class="token variable">$value</span>&quot;</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+                  <span class="token comment"># echo &quot;creating&quot; $value</span>
+                  <span class="token function">mkdir</span> -p <span class="token variable">$value</span> <span class="token operator">&amp;&amp;</span> <span class="token function">chown</span> -R <span class="token variable">$user</span> <span class="token variable">$value</span>
+              <span class="token keyword">fi</span>
+          <span class="token keyword">fi</span>
+       <span class="token keyword">done</span>
+    <span class="token keyword">fi</span>
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">[</span> -x <span class="token variable">$nginx</span> <span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token builtin class-name">exit</span> <span class="token number">5</span>
+    <span class="token punctuation">[</span> -f <span class="token variable">$NGINX_CONF_FILE</span> <span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token builtin class-name">exit</span> <span class="token number">6</span>
+    make_dirs
+    <span class="token builtin class-name">echo</span> -n $<span class="token string">&quot;Starting <span class="token variable">$prog</span>: &quot;</span>
+    daemon <span class="token variable">$nginx</span> -c <span class="token variable">$NGINX_CONF_FILE</span>
+    <span class="token assign-left variable">retval</span><span class="token operator">=</span><span class="token variable">$?</span>
+    <span class="token builtin class-name">echo</span>
+    <span class="token punctuation">[</span> <span class="token variable">$retval</span> -eq <span class="token number">0</span> <span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> <span class="token function">touch</span> <span class="token variable">$lockfile</span>
+    <span class="token builtin class-name">return</span> <span class="token variable">$retval</span>
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">stop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token builtin class-name">echo</span> -n $<span class="token string">&quot;Stopping <span class="token variable">$prog</span>: &quot;</span>
+    killproc <span class="token variable">$prog</span> -QUIT
+    <span class="token assign-left variable">retval</span><span class="token operator">=</span><span class="token variable">$?</span>
+    <span class="token builtin class-name">echo</span>
+    <span class="token punctuation">[</span> <span class="token variable">$retval</span> -eq <span class="token number">0</span> <span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> <span class="token function">rm</span> -f <span class="token variable">$lockfile</span>
+    <span class="token builtin class-name">return</span> <span class="token variable">$retval</span>
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">restart</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    configtest <span class="token operator">||</span> <span class="token builtin class-name">return</span> <span class="token variable">$?</span>
+    stop
+    <span class="token function">sleep</span> <span class="token number">1</span>
+    start
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">reload</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    configtest <span class="token operator">||</span> <span class="token builtin class-name">return</span> <span class="token variable">$?</span>
+    <span class="token builtin class-name">echo</span> -n $<span class="token string">&quot;Reloading <span class="token variable">$prog</span>: &quot;</span>
+    killproc <span class="token variable">$prog</span> -HUP
+    <span class="token assign-left variable">retval</span><span class="token operator">=</span><span class="token variable">$?</span>
+    <span class="token builtin class-name">echo</span>
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">force_reload</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    restart
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">configtest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token variable">$nginx</span> -t -c <span class="token variable">$NGINX_CONF_FILE</span>
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">rh_status</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    status <span class="token variable">$prog</span>
+<span class="token punctuation">}</span>
+
+<span class="token function-name function">rh_status_q</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    rh_status <span class="token operator">&gt;</span>/dev/null <span class="token operator"><span class="token file-descriptor important">2</span>&gt;</span><span class="token file-descriptor important">&amp;1</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">case</span> <span class="token string">&quot;<span class="token variable">$1</span>&quot;</span> <span class="token keyword">in</span>
+    start<span class="token punctuation">)</span>
+        rh_status_q <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">exit</span> <span class="token number">0</span>
+        <span class="token variable">$1</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    stop<span class="token punctuation">)</span>
+        rh_status_q <span class="token operator">||</span> <span class="token builtin class-name">exit</span> <span class="token number">0</span>
+        <span class="token variable">$1</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    restart<span class="token operator">|</span>configtest<span class="token punctuation">)</span>
+        <span class="token variable">$1</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    reload<span class="token punctuation">)</span>
+        rh_status_q <span class="token operator">||</span> <span class="token builtin class-name">exit</span> <span class="token number">7</span>
+        <span class="token variable">$1</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    force-reload<span class="token punctuation">)</span>
+        force_reload
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    status<span class="token punctuation">)</span>
+        rh_status
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    condrestart<span class="token operator">|</span>try-restart<span class="token punctuation">)</span>
+        rh_status_q <span class="token operator">||</span> <span class="token builtin class-name">exit</span> <span class="token number">0</span>
+            <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    *<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> $<span class="token string">&quot;Usage: <span class="token variable">$0</span> {start|stop|status|restart|condrestart|try-restart|reload|force-reload|configtest}&quot;</span>
+        <span class="token builtin class-name">exit</span> <span class="token number">2</span>
+<span class="token keyword">esac</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br></div></div><h3 id="修改部分参数-2"><a href="#修改部分参数-2" class="header-anchor">#</a> 修改部分参数</h3> <p>如果你的 Nginx 是通过编译安装的，则需要根据实际安装时的设置，修改启动脚本中的两个参数（大约在第 22 行和第 25 行）：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 修改成 Nginx 执行程序的路径，例如我的一般是：/usr/local/nginx/sbin/nginx</span>
+<span class="token assign-left variable">nginx</span><span class="token operator">=</span><span class="token string">&quot;/usr/sbin/nginx&quot;</span>
+
+<span class="token comment"># 修改成配置文件的路径，例如我的一般是：/usr/local/nginx/conf/nginx.conf</span>
+<span class="token assign-left variable">NGINX_CONF_FILE</span><span class="token operator">=</span><span class="token string">&quot;/etc/nginx/nginx.conf&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>还需要修改 PID 文件路径，大约在启动脚本中的第 11 行可以看到被注释的默认路径，在下面加一行，手动指定成和 nginx.conf 文件中的 PID 路径一致即可：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>设置成和 nginx.conf 中一致。例如我的一般是：/usr/local/nginx/logs/nginx.pid
+<span class="token comment"># pidfile:     /var/run/nginx.pid</span>
+pidfile:     /usr/local/nginx/logs/nginx.pid
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><h3 id="添加执行权限-2"><a href="#添加执行权限-2" class="header-anchor">#</a> 添加执行权限</h3> <p>上述脚本保存为 <code>/etc/init.d/nginx</code>，然后设置文件的执行权限：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 给所有用户给予可执行权限</span>
+<span class="token function">chmod</span> a+x /etc/init.d/nginx
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>至此就可以通过下面指令控制 Nginx 的启动、停止和重新加载了：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 启动</span>
+/etc/init.d/nginx start
+
+<span class="token comment"># 停止</span>
+/etc/init.d/nginx stop
+
+<span class="token comment"># 重新加载配置</span>
+/etc/init.d/nginx reload
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><h3 id="添加至开机自启动-2"><a href="#添加至开机自启动-2" class="header-anchor">#</a> 添加至开机自启动</h3> <p>现在将 Nginx 服务加入 chkconfig 管理列表：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 添加 Nginx 启动脚本为 chkconfig 管理的一个服务</span>
+<span class="token function">chkconfig</span> --add /etc/init.d/nginx
+
+<span class="token comment"># 将 Nginx 加入开机自启</span>
+<span class="token function">chkconfig</span> /etc/init.d/nginx on
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>当然了，如果需要关闭开机启动的功能：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 查看该服务进程状态</span>
+<span class="token function">chkconfig</span> --list nginx
+
+<span class="token comment"># 关闭 Nginx 开机自启</span>
+<span class="token function">chkconfig</span> /etc/init.d/nginx off
+
+<span class="token comment"># 删除 chkconfig 管理的的 Nginx 启动服务（如果确实不需要了）</span>
+<span class="token function">chkconfig</span> --del /etc/init.d/nginx
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><h3 id="开机自启脚本提供的快捷命令"><a href="#开机自启脚本提供的快捷命令" class="header-anchor">#</a> 开机自启脚本提供的快捷命令</h3> <p>通过 Nginx 开机自启脚本本身提供了一些 Nginx 常用操作的快捷命令，一旦我们通过这个脚本实现开机自启后，就可以通过这些快捷命令来操作 Nginx 了：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 启动 Nginx</span>
+/etc/init.d/nginx start
+
+<span class="token comment"># 重新加载 Nginx 配置</span>
+/etc/init.d/nginx reload
+
+<span class="token comment"># 停止 Nginx</span>
+/etc/init.d/nginx stop
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>这些命令通过看脚本代码就能找到。</p> <h2 id="centos-7-x-设置开机自启"><a href="#centos-7-x-设置开机自启" class="header-anchor">#</a> CentOS 7.x 设置开机自启</h2> <blockquote><p>以下所有命令，如果你是 root 账户，直接执行即可，不是的话前面加 <code>sudo</code> 获取权限。</p></blockquote> <p>在 CentOS 7.x 版本的系统开始，就不太好通过 chkconfig + <a href="https://www.nginx.com/resources/wiki/start/topics/examples/redhatnginxinit/" target="_blank" rel="noopener noreferrer">Red Hat NGINX Init Script<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 的方式来设置 Nginx 的开机启动了。</p> <p>因为会留下了一个 bug：通过 <code>/etc/init.d/nginx</code> 脚本方式来控制 Nginx 的启动、停止时，start 一直卡着（实际端口是开启了，必须通过 Ctrl + C 强制关闭），stop 不生效（提示成功，但是端口没关闭）。</p> <p>那么对于 CentOS 7.x 系统，可以通过 systemd 来管理 Nginx。</p> <h3 id="建立服务文件"><a href="#建立服务文件" class="header-anchor">#</a> 建立服务文件</h3> <p>新建文件：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token function">vim</span> /usr/lib/systemd/system/nginx.service
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>往该文件内写入以下内容（内容模版参考官网 <a href="https://www.nginx.com/resources/wiki/start/topics/examples/systemd/" target="_blank" rel="noopener noreferrer">NGINX systemd service file<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>）：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>Unit<span class="token punctuation">]</span>
+<span class="token assign-left variable">Description</span><span class="token operator">=</span>The NGINX HTTP and reverse proxy server
+<span class="token assign-left variable">After</span><span class="token operator">=</span>syslog.target network-online.target remote-fs.target nss-lookup.target
+<span class="token assign-left variable">Wants</span><span class="token operator">=</span>network-online.target
+
+<span class="token punctuation">[</span>Service<span class="token punctuation">]</span>
+<span class="token assign-left variable">Type</span><span class="token operator">=</span>forking
+<span class="token assign-left variable">PIDFile</span><span class="token operator">=</span>/run/nginx.pid
+<span class="token assign-left variable">ExecStartPre</span><span class="token operator">=</span>/usr/sbin/nginx -t
+<span class="token assign-left variable">ExecStart</span><span class="token operator">=</span>/usr/sbin/nginx
+<span class="token assign-left variable">ExecReload</span><span class="token operator">=</span>/usr/sbin/nginx -s reload
+<span class="token assign-left variable">ExecStop</span><span class="token operator">=</span>/bin/kill -s QUIT <span class="token variable">$MAINPID</span>
+<span class="token assign-left variable">PrivateTmp</span><span class="token operator">=</span>true
+
+<span class="token punctuation">[</span>Install<span class="token punctuation">]</span>
+<span class="token assign-left variable">WantedBy</span><span class="token operator">=</span>multi-user.target
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p>文件内容解释：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>Unit<span class="token punctuation">]</span>:服务的说明
+Description:描述服务
+After:描述服务类别
+
+<span class="token punctuation">[</span>Service<span class="token punctuation">]</span>服务运行参数的设置
+<span class="token assign-left variable">Type</span><span class="token operator">=</span>forking是后台运行的形式
+ExecStart为服务的具体运行命令
+ExecReload为重启命令
+ExecStop为停止命令
+<span class="token assign-left variable">PrivateTmp</span><span class="token operator">=</span>True表示给服务分配独立的临时空间
+注意：启动、重启、停止命令全部要求使用绝对路径
+
+<span class="token punctuation">[</span>Install<span class="token punctuation">]</span>服务安装的相关设置，可设置为多用户
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><h3 id="修改部分参数-3"><a href="#修改部分参数-3" class="header-anchor">#</a> 修改部分参数</h3> <p>如果你的 Nginx 是通过编译安装的，则需要根据实际安装时的设置，修改文件中的部分参数，修改后的示例如下：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>Unit<span class="token punctuation">]</span>
+<span class="token assign-left variable">Description</span><span class="token operator">=</span>The NGINX HTTP and reverse proxy server
+<span class="token assign-left variable">After</span><span class="token operator">=</span>syslog.target network-online.target remote-fs.target nss-lookup.target
+<span class="token assign-left variable">Wants</span><span class="token operator">=</span>network-online.target
+
+<span class="token punctuation">[</span>Service<span class="token punctuation">]</span>
+<span class="token assign-left variable">Type</span><span class="token operator">=</span>forking
+<span class="token assign-left variable">PIDFile</span><span class="token operator">=</span>/usr/local/nginx/logs/nginx.pid
+<span class="token assign-left variable">ExecStartPre</span><span class="token operator">=</span>/usr/local/nginx/sbin/nginx -t -c /usr/local/nginx/conf/nginx.conf
+<span class="token assign-left variable">ExecStart</span><span class="token operator">=</span>/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+<span class="token assign-left variable">ExecReload</span><span class="token operator">=</span>/usr/local/nginx/sbin/nginx -s reload
+<span class="token assign-left variable">ExecStop</span><span class="token operator">=</span>/usr/local/nginx/sbin/nginx -s quit
+<span class="token assign-left variable">PrivateTmp</span><span class="token operator">=</span>true
+
+<span class="token punctuation">[</span>Install<span class="token punctuation">]</span>
+<span class="token assign-left variable">WantedBy</span><span class="token operator">=</span>multi-user.target
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><h3 id="添加执行权限-3"><a href="#添加执行权限-3" class="header-anchor">#</a> 添加执行权限</h3> <p>给上述文件添加执行权限：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token function">chmod</span> +x /usr/lib/systemd/system/nginx.service
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h3 id="添加至开机自启动-3"><a href="#添加至开机自启动-3" class="header-anchor">#</a> 添加至开机自启动</h3> <p>设置开机自启动：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>systemctl <span class="token builtin class-name">enable</span> nginx.service
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h3 id="nginx-服务管理"><a href="#nginx-服务管理" class="header-anchor">#</a> Nginx 服务管理</h3> <p>此时可以使用一些快捷命令进行 Nginx 服务管理：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># Nginx 启动</span>
+systemctl start nginx.service
+
+<span class="token comment"># 查看 Nginx 服务当前状态</span>
+systemctl status nginx.service
+
+<span class="token comment"># Nginx 重载</span>
+systemctl reload nginx.service
+
+<span class="token comment"># Nginx 停止</span>
+systemctl stop nginx.service
+
+<span class="token comment"># 重新启动 Nginx 服务</span>
+systemctl restart nginx.service
+
+<span class="token comment"># 停止 Nginx 的开机自启动</span>
+systemctl disable nginx.service
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><p>Nginx 启动日志查看：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>journalctl -f -u nginx.service
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h3 id="systemd-提供的一些命令"><a href="#systemd-提供的一些命令" class="header-anchor">#</a> systemd 提供的一些命令</h3> <p>查看所有已启动的服务：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>systemctl list-units --type<span class="token operator">=</span>service
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>命令集合：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 查看所有开机启动项</span>
+systemctl list-unit-files --type<span class="token operator">=</span>service <span class="token operator">|</span> <span class="token function">grep</span> enabled
+
+<span class="token comment"># 查询服务是否开机启动</span>
+systemctl is-enabled servicename.service
+
+<span class="token comment"># 开机运行服务</span>
+systemctl <span class="token builtin class-name">enable</span> *.service
+
+<span class="token comment"># 取消开机运行</span>
+systemctl disable *.service
+
+<span class="token comment"># 启动服务</span>
+systemctl start *.service
+
+<span class="token comment"># 停止服务</span>
+systemctl stop *.service
+
+<span class="token comment"># 重启服务</span>
+systemctl restart *.service
+
+<span class="token comment"># 重新加载服务配置文件</span>
+systemctl reload *.service
+
+<span class="token comment"># 查询服务运行状态</span>
+systemctl status *.service
+
+<span class="token comment"># 显示启动失败的服务</span>
+systemctl --failed
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br></div></div><p>注：<code>*</code> 代表某个服务的名字，如 http 的服务名为 httpd。</p> <h2 id="参考文档"><a href="#参考文档" class="header-anchor">#</a> 参考文档</h2> <ul><li><a href="http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html" target="_blank" rel="noopener noreferrer">Systemd 入门教程：命令篇<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul> <p>（完）</p></div> <!----> <div class="content__content-bottom"></div> <footer class="page-meta"><!----> <!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/study_notes/basic-skills/nginx/common-commands/" class="prev"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon prev-icon"><path d="M906.783 588.79c-.02 8.499-6.882 15.36-15.38 15.37l-443.7-.01 75.704 191.682c2.52 6.42.482 13.763-5.038 17.91-5.52 4.168-13.138 4.147-18.616-.092L123.228 524.175a15.362 15.362 0 0 1-6-12.165c0-4.782 2.222-9.277 6-12.185L499.753 210.35a15.388 15.388 0 0 1 9.38-3.195c3.236 0 6.502 1.034 9.236 3.103 5.52 4.147 7.578 11.49 5.038 17.91L447.683 419.84l443.72-.01c8.498.01 15.36 6.881 15.36 15.36l.02 153.6z" fill="currentColor"></path></svg>
+        Nginx 常用命令
+      </a></span> <span class="next"><a href="/study_notes/basic-skills/nginx/config-file-params-explanation/">
+        Nginx 配置文件详解
+        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon next-icon"><path d="M906.772 512c0 4.772-2.211 9.267-5.99 12.175L524.257 813.66a15.37 15.37 0 0 1-18.616.092 15.368 15.368 0 0 1-5.038-17.91l75.714-191.672h-443.73c-8.488 0-15.36-6.881-15.36-15.36v-153.6c0-8.489 6.872-15.36 15.36-15.36h443.73l-75.714-191.682a15.358 15.358 0 0 1 5.048-17.91c5.51-4.158 13.128-4.137 18.606.092l376.525 289.485a15.323 15.323 0 0 1 5.99 12.165z" fill="currentColor"></path></svg></a></span></p></div> <!----> <!----> <div class="content__page-bottom"></div></main> <!----></div><div class="global-ui"><!----></div></div>
+    <script src="/study_notes/assets/js/app.006a285a.js" defer></script><script src="/study_notes/assets/js/vendors~layout-Layout.de8637a7.js" defer></script><script src="/study_notes/assets/js/vendors~layout-Blog~layout-Layout~layout-NotFound.943521ea.js" defer></script><script src="/study_notes/assets/js/page-Nginx设置开机自启.a170900d.js" defer></script>
+  </body>
+</html>
