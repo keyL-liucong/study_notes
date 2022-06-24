@@ -1,11 +1,11 @@
 module.exports = [
   {
-    title: 'ecs之旅',
+    title: 'CICD',
     collapsable: false,
     children: [
       {
-        title: 'ecs',
-        path: '/ecs/step-process',
+        title: 'CICD实践',
+        path: '/ecs/study-ci-cd',
         collapsable: true
       },
     ] 
