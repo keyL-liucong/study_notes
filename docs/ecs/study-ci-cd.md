@@ -1,5 +1,6 @@
 #
-
+参考文章
+[保姆级教学 Jenkins 部署前端项目](https://juejin.cn/post/7102360505313918983)
 ## CICD
 
 > * gitee/gitlab => tomcat jsp
